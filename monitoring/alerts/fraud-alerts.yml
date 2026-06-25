@@ -1,0 +1,10 @@
+groups:
+  - name: fraud-platform
+    rules:
+      - alert: FraudApiDown
+        expr: up{job="fraud-api"} == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: Fraud API is unavailable

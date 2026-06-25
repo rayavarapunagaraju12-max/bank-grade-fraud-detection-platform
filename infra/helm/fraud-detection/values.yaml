@@ -1,0 +1,22 @@
+api:
+  image: fraud-detection-api:latest
+  replicas: 2
+  secretName: fraud-secrets
+frontend:
+  image: fraud-detection-frontend:latest
+  replicas: 2
+consumer:
+  replicas: 3
+env:
+  kafkaBootstrapServers: kafka:9092
+  redisUrl: redis://redis:6379/0
+  neo4jUri: bolt://neo4j:7687
+  appEnv: pilot
+resources:
+  api:
+    requests:
+      cpu: 250m
+      memory: 512Mi
+    limits:
+      cpu: "1"
+      memory: 1Gi

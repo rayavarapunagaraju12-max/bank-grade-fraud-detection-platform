@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fraudops.local/contracts/kafka-transaction.schema.json",
+  "title": "FraudOps Transaction Kafka Message",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "transaction_id",
+    "account_id",
+    "amount",
+    "currency",
+    "merchant_id",
+    "merchant_category",
+    "device_id",
+    "ip_address",
+    "channel",
+    "country",
+    "timestamp"
+  ],
+  "properties": {
+    "transaction_id": { "type": "string", "minLength": 1 },
+    "account_id": { "type": "string", "minLength": 1 },
+    "amount": { "type": "number", "exclusiveMinimum": 0 },
+    "currency": { "type": "string", "default": "USD" },
+    "merchant_id": { "type": "string", "minLength": 1 },
+    "merchant_category": { "type": "string", "default": "general" },
+    "device_id": { "type": "string", "minLength": 1 },
+    "ip_address": { "type": "string", "minLength": 1 },
+    "beneficiary_id": { "type": ["string", "null"] },
+    "channel": {
+      "type": "string",
+      "enum": ["card_present", "card_not_present", "wire", "ach", "atm"]
+    },
+    "country": { "type": "string", "minLength": 2 },
+    "timestamp": { "type": "string", "format": "date-time" }
+  }
+}

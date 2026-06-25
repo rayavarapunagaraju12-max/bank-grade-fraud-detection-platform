@@ -1,0 +1,50 @@
+services:
+  api:
+    depends_on: !reset
+      - postgres
+      - redis
+    environment:
+      ENABLE_API_KEY_AUTH: "true"
+      DEMO_API_KEY: demo-client-key
+      GENERATE_LLM_NARRATIVE_INLINE: "false"
+      KAFKA_ENABLED: "false"
+      DATABASE_URL: postgresql+psycopg://fraud:fraud_password@postgres:5432/fraud
+      REDIS_URL: redis://redis:6379/0
+
+  frontend:
+    environment:
+      VITE_API_URL: http://localhost:8000
+      VITE_API_KEY: demo-client-key
+
+  stream-consumer:
+    profiles: ["streaming"]
+
+  zookeeper:
+    profiles: ["streaming"]
+
+  kafka:
+    profiles: ["streaming"]
+
+  neo4j:
+    profiles: ["graph"]
+
+  minio:
+    profiles: ["full"]
+
+  ollama:
+    profiles: ["ai"]
+
+  prometheus:
+    profiles: ["monitoring"]
+
+  grafana:
+    profiles: ["monitoring"]
+
+  elasticsearch:
+    profiles: ["logging"]
+
+  logstash:
+    profiles: ["logging"]
+
+  kibana:
+    profiles: ["logging"]

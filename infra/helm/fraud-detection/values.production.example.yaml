@@ -1,0 +1,26 @@
+api:
+  image: registry.example.com/fraud-detection-api:2026.06
+  replicas: 3
+  secretName: fraud-secrets
+
+frontend:
+  image: registry.example.com/fraud-detection-frontend:2026.06
+  replicas: 2
+
+consumer:
+  replicas: 4
+
+env:
+  appEnv: production
+  kafkaBootstrapServers: kafka.prod.example.com:9092
+  redisUrl: redis://fraud-redis:6379/0
+  neo4jUri: bolt://fraud-neo4j:7687
+
+resources:
+  api:
+    requests:
+      cpu: 500m
+      memory: 1Gi
+    limits:
+      cpu: "2"
+      memory: 2Gi

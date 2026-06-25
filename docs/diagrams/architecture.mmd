@@ -1,0 +1,41 @@
+flowchart LR
+  Analyst[Analyst / Supervisor / Auditor] --> UI[React FraudOps Console]
+  UI -->|REST + bearer/API key| API[FastAPI Fraud API]
+  Generator[Transaction Generator] -->|validated transaction schema| Kafka[(Kafka)]
+  API -->|validated transaction schema| Kafka
+
+  Kafka --> Consumer[Stream Consumer]
+  Consumer --> Redis[(Redis Feature Windows)]
+  Consumer --> Neo4j[(Neo4j Entity Graph)]
+  Consumer --> Postgres[(PostgreSQL Transactions / Alerts / Audit)]
+  Consumer --> DLQ[(Dead Letter Queue)]
+
+  Redis --> Features[Feature Engineering]
+  Neo4j --> GraphFeatures[Graph Features]
+  Features --> Ensemble[ML Ensemble Scoring]
+  GraphFeatures --> Ensemble
+  MinIO[(MinIO Model Artifacts)] --> Ensemble
+  Ensemble --> Explain[SHAP-style Explanations]
+  Explain --> Narrative[LLM / Local Narrative]
+
+  API --> Postgres
+  API --> Compliance[Compliance Services]
+  Compliance --> Watchlists[OFAC / UNSC / EU / SEBI Watchlists]
+  Compliance --> Reports[SAR / STR Drafts]
+  Compliance --> Audit[Hash-linked Audit Evidence]
+
+  API --> Governance[Model Governance API]
+  Governance --> Postgres
+  Governance --> MinIO
+
+  Postgres --> UI
+  Neo4j --> UI
+  Reports --> UI
+  DLQ --> UI
+  Governance --> UI
+
+  API --> Prometheus[Prometheus Metrics]
+  Prometheus --> Grafana[Grafana Dashboards]
+  API --> Logstash[Logstash]
+  Logstash --> Elastic[(Elasticsearch)]
+  Elastic --> Kibana[Kibana Logs]

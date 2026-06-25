@@ -1,0 +1,6 @@
+amount,account_velocity_5m,device_reuse_24h,ip_reuse_24h,graph_degree,is_fraud
+42.10,1,1,1,2,0
+120.40,2,1,1,3,0
+4999.99,24,12,11,18,1
+82.50,1,1,1,1,0
+9200.00,31,18,14,22,1

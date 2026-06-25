@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fraud-transaction-generator
+  namespace: fraud-detection
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fraud-transaction-generator
+  template:
+    metadata:
+      labels:
+        app: fraud-transaction-generator
+    spec:
+      containers:
+        - name: transaction-generator
+          image: fraud-detection-api:latest
+          command:
+            - python
+            - -m
+            - streaming.transaction_generator.generator
+            - --rate
+            - "$(STREAM_RATE)"
+            - --seconds
+            - "0"
+            - --fraud-ratio
+            - "$(STREAM_FRAUD_RATIO)"
+          env:
+            - name: STREAM_RATE
+              value: "1"
+            - name: STREAM_FRAUD_RATIO
+              value: "0.08"
+          envFrom:
+            - secretRef:
+                name: fraud-secrets
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi

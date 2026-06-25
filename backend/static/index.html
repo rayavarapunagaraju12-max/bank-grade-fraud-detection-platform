@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FraudOps Realtime Console</title>
+    <style>
+      body { margin: 0; font-family: Inter, system-ui, Segoe UI, sans-serif; background: #eef1f4; color: #18202a; }
+      .shell { display: grid; grid-template-columns: 300px 1fr; min-height: 100vh; }
+      aside { background: #18202a; color: white; padding: 24px; }
+      main { padding: 24px; }
+      h1 { margin: 0 0 18px; font-size: 26px; }
+      button { border: 0; border-radius: 8px; background: #116a7b; color: white; padding: 12px 14px; font-weight: 800; cursor: pointer; width: 100%; margin: 8px 0; }
+      button.secondary { background: #2f3a47; }
+      .grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-bottom: 16px; }
+      .card, .panel { background: white; border: 1px solid #d7dde5; border-radius: 8px; padding: 18px; }
+      .card span { color: #5f6b7a; font-weight: 700; display: block; }
+      .card strong { font-size: 32px; }
+      .layout { display: grid; grid-template-columns: 1.1fr .9fr; gap: 16px; }
+      table { width: 100%; border-collapse: collapse; }
+      th, td { padding: 12px; border-bottom: 1px solid #e5e8ed; text-align: left; }
+      tr { cursor: pointer; }
+      tr:hover { background: #f5f7f9; }
+      .band { border-radius: 999px; padding: 4px 8px; font-weight: 800; background: #fff1d6; color: #b54708; }
+      .critical { background: #fee4e2; color: #b42318; }
+      pre { background: #f7f8fa; border-radius: 8px; padding: 14px; overflow: auto; max-height: 520px; }
+      .status { display: inline-block; border-radius: 999px; padding: 8px 12px; background: #dff6ec; color: #027a48; font-weight: 800; margin-bottom: 16px; }
+      @media (max-width: 900px) { .shell, .layout, .grid { grid-template-columns: 1fr; } }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <aside>
+        <h1>FraudOps</h1>
+        <p>Local AI realtime console connected directly to FastAPI.</p>
+        <button onclick="generateCase()">Generate AI Fraud Case</button>
+        <button class="secondary" onclick="loadAlerts()">Refresh Alert Queue</button>
+        <button class="secondary" onclick="loadHealth()">Check Backend</button>
+      </aside>
+      <main>
+        <div id="status" class="status">Connecting</div>
+        <section class="grid">
+          <div class="card"><span>Open alerts</span><strong id="openAlerts">0</strong></div>
+          <div class="card"><span>Highest risk</span><strong id="maxRisk">0.00</strong></div>
+          <div class="card"><span>Feature store</span><strong id="featureStore">-</strong></div>
+          <div class="card"><span>Graph mode</span><strong id="graphMode">-</strong></div>
+        </section>
+        <section class="layout">
+          <div class="panel">
+            <h2>Risk-ranked Alert Queue</h2>
+            <table>
+              <thead><tr><th>Alert</th><th>Transaction</th><th>Risk</th><th>Score</th><th>Status</th></tr></thead>
+              <tbody id="alerts"></tbody>
+            </table>
+          </div>
+          <div class="panel">
+            <h2>Investigation Workspace</h2>
+            <pre id="details">Select or generate an alert.</pre>
+          </div>
+        </section>
+      </main>
+    </div>
+    <script>
+      async function loadHealth() {
+        const res = await fetch('/health');
+        const data = await res.json();
+        document.getElementById('status').textContent = `API ${data.status} - ${data.mode}`;
+        document.getElementById('featureStore').textContent = data.feature_store;
+        document.getElementById('graphMode').textContent = data.graph;
+      }
+
+      async function generateCase() {
+        document.getElementById('details').textContent = 'Generating fraud case...';
+        const res = await fetch('/demo/generate?fraud_ring=true', { method: 'POST' });
+        const data = await res.json();
+        document.getElementById('details').textContent = JSON.stringify(data, null, 2);
+        await loadAlerts();
+        await loadHealth();
+      }
+
+      async function loadAlerts() {
+        const res = await fetch('/alerts?min_score=0');
+        const rows = await res.json();
+        document.getElementById('openAlerts').textContent = rows.length;
+        document.getElementById('maxRisk').textContent = rows.length ? Math.max(...rows.map(row => row.score)).toFixed(2) : '0.00';
+        document.getElementById('alerts').innerHTML = rows.map(row => `
+          <tr onclick='showDetails(${JSON.stringify(JSON.stringify(row))})'>
+            <td>${row.alert_id}</td>
+            <td>${row.transaction_id}</td>
+            <td><span class="band ${row.risk_band}">${row.risk_band}</span></td>
+            <td>${row.score.toFixed(3)}</td>
+            <td>${row.status}</td>
+          </tr>
+        `).join('');
+      }
+
+      function showDetails(serialized) {
+        document.getElementById('details').textContent = JSON.stringify(JSON.parse(serialized), null, 2);
+      }
+
+      loadHealth().then(loadAlerts);
+      setInterval(loadAlerts, 5000);
+    </script>
+  </body>
+</html>

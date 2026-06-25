@@ -1,0 +1,25 @@
+[tool.ruff]
+target-version = "py312"
+line-length = 120
+exclude = ["backend/.venv", "frontend/node_modules", "frontend/dist"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+
+[tool.mypy]
+python_version = "3.12"
+ignore_missing_imports = true
+disallow_untyped_defs = false
+exclude = "(backend/.venv|frontend/node_modules|frontend/dist)"
+
+[tool.bandit]
+exclude_dirs = ["backend/.venv", "frontend/node_modules", "frontend/dist", ".pytest_cache"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+markers = [
+  "integration: tests requiring Docker/testcontainers",
+  "regression: model regression checks"
+]
+asyncio_default_fixture_loop_scope = "function"

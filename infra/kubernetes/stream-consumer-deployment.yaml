@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fraud-stream-consumer
+  namespace: fraud-detection
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: fraud-stream-consumer
+  template:
+    metadata:
+      labels:
+        app: fraud-stream-consumer
+    spec:
+      containers:
+        - name: stream-consumer
+          image: fraud-detection-api:latest
+          command: ["python", "-m", "streaming.kafka_consumer.consumer"]
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              cpu: "1"
+              memory: 1Gi
+          envFrom:
+            - secretRef:
+                name: fraud-secrets
+          livenessProbe:
+            exec:
+              command: ["python", "-c", "import backend.config; print('ok')"]
+            initialDelaySeconds: 30
+            periodSeconds: 30
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: fraud-stream-consumer-hpa
+  namespace: fraud-detection
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: fraud-stream-consumer
+  minReplicas: 2
+  maxReplicas: 12
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
