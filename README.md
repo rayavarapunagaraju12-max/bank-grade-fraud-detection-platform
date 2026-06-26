@@ -112,6 +112,45 @@ Fraud Analyst Dashboard
 Compliance & Audit Trail
 
 ---
+## Screenshots
+
+### FraudOps Analyst Dashboard
+
+Real-time fraud monitoring dashboard with alert queue, investigations, graph visualization, compliance reports, and model governance.
+
+![FraudOps Dashboard](docs/screenshots/dashboard.png)
+
+---
+
+### API Documentation
+
+Interactive OpenAPI documentation for transaction ingestion, authentication, alert management, and model governance APIs.
+
+![Swagger API](docs/screenshots/swagger-api.png)
+
+---
+
+### Grafana Monitoring
+
+Operational monitoring dashboard for application metrics, transaction throughput, and system health.
+
+![Grafana](docs/screenshots/grafana.png)
+
+---
+
+### Kibana Log Analytics
+
+Centralized log management and search for fraud platform services.
+
+![Kibana](docs/screenshots/kibana.png)
+
+---
+
+### Model Artifact Registry
+
+MinIO object storage used for model artifacts, governance records, and deployment assets.
+
+![MinIO](docs/screenshots/minio.png)
 
 # ⚙️ Technology Stack
 
