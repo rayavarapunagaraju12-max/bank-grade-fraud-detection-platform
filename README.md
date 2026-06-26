@@ -112,45 +112,61 @@ Fraud Analyst Dashboard
 Compliance & Audit Trail
 
 ---
-## Screenshots
 
-### FraudOps Analyst Dashboard
+## 📸 Project Screenshots
 
-Real-time fraud monitoring dashboard with alert queue, investigations, graph visualization, compliance reports, and model governance.
+### FraudOps AI Dashboard
 
-![FraudOps Dashboard](docs/screenshots/dashboard.png)
-
----
-
-### API Documentation
-
-Interactive OpenAPI documentation for transaction ingestion, authentication, alert management, and model governance APIs.
-
-![Swagger API](docs/screenshots/swagger-api.png)
+![Dashboard](docs/screenshots/FraudOps%20AI%20Dashboard.png)
 
 ---
 
-### Grafana Monitoring
+### FastAPI Swagger API
 
-Operational monitoring dashboard for application metrics, transaction throughput, and system health.
-
-![Grafana](docs/screenshots/grafana.png)
+![Swagger](docs/screenshots/FastAPI%20Swagger%20UI.png)
 
 ---
 
-### Kibana Log Analytics
+### Neo4j Graph Visualization
 
-Centralized log management and search for fraud platform services.
-
-![Kibana](docs/screenshots/kibana.png)
+![Neo4j](docs/screenshots/Neo4j%20Graph.png)
 
 ---
 
-### Model Artifact Registry
+### Prometheus Monitoring
 
-MinIO object storage used for model artifacts, governance records, and deployment assets.
+![Prometheus](docs/screenshots/Prometheus%20Real-time%20transaction%20ingestion%20speed..png)
 
-![MinIO](docs/screenshots/minio.png)
+---
+
+### Grafana Dashboard
+
+![Grafana](docs/screenshots/Grafana%20Monitoring%20(2).png)
+
+---
+
+### Kibana Logs
+
+![Kibana](docs/screenshots/Kibana%20Logs.png)
+
+---
+
+### MinIO Model Registry
+
+![MinIO](docs/screenshots/MinIO%20Model%20Registry.png)
+
+---
+
+### Sanctions Screening
+
+![Sanctions](docs/screenshots/Official%20sanction%20List.png)
+
+---
+
+### Transaction Graph
+
+![Transaction Graph](docs/screenshots/Graph%20of%20TRC.png)
+
 
 # ⚙️ Technology Stack
 
